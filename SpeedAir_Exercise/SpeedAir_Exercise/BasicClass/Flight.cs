@@ -25,6 +25,11 @@ namespace SpeedAir_Exercise.BasicClass
             this.day = day;
         }
 
+        public int GetID()
+        {
+            return id;
+        }
+
         public City GetFromCity()
         {
             return fromCity;
