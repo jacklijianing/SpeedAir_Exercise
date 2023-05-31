@@ -7,31 +7,18 @@ namespace SpeedAir_Exercise
 {
     class Program
     {
+        private static string projectDirectory;
         static void Main(string[] args)
         {
             string workingDirectory = Environment.CurrentDirectory;
-            string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
+            projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
 
             // read flight information, story 1
-            string flightDataFileDirectory = Path.Combine(projectDirectory, "Data/flight_info.txt");
-            FlightLoader_File flightLoader = new FlightLoader_File(flightDataFileDirectory);
-            List<Flight> flights = flightLoader.LoadFlights();
+            List<Flight> flights = readFlightFILE();
+            // change readFlightFILE to readFlightJSON to try to load flight in JSON file
+
             // show flights out
-
             foreach (Flight flight in flights)
-            {
-                FlightPrinter printer = new FlightPrinter(flight);
-                printer.PrintFlightOnCMD();
-            }
-
-            // ANOTHER METHOD TO READ, story 1
-            // read flight information from JSON file
-            string flightDataFileDirectory2 = Path.Combine(projectDirectory, "Data/flight_info.json");
-            FlightLoader_JSON flightLoader2 = new FlightLoader_JSON(flightDataFileDirectory2);
-            List<Flight> flights2 = flightLoader2.LoadFlights();
-            // show flight2 information out
-
-            foreach (Flight flight in flights2)
             {
                 FlightPrinter printer = new FlightPrinter(flight);
                 printer.PrintFlightOnCMD();
@@ -45,6 +32,8 @@ namespace SpeedAir_Exercise
             List<Order> orders = orderLoader.getSucceedOrders();
             Console.WriteLine("Orders loaded, succeed: {0}, error: {1}", orderLoader.getSucceedCount(), orderLoader.getFailedCount());
             List<OrderRaw> failedOrders = orderLoader.getFailedOrders();
+
+            // end of read orders
 
             // allocate orders to flights
             OrderAllocator allocator = OrderAllocator.getInstance();
@@ -81,6 +70,27 @@ namespace SpeedAir_Exercise
             Console.WriteLine("Below are the orders with flight itinerary");
             FlightItinerary itinerary = new FlightItinerary(allocatedFlights, failedOrders);
             itinerary.ordersShowFlightInfo();
+        }
+
+        private static List<Flight> readFlightFILE()
+        {
+            // read flight information, story 1
+            string flightDataFileDirectory = Path.Combine(projectDirectory, "Data/flight_info.txt");
+            FlightLoader_File flightLoader = new FlightLoader_File(flightDataFileDirectory);
+            List<Flight> flights = flightLoader.LoadFlights();
+            return flights;
+        }
+
+        private static List<Flight> readFlightJSON()
+        {
+            // ANOTHER METHOD TO READ, story 1
+            // THIS PART IS OF NO USE IN THIS CODE, JUST BECAUSE STORY 1 DIDN'T SAY WHAT KIND OF INPUT FILE IT COULD BE, SO I CREATED 2 WAYS
+            // read flight information from JSON file
+            string flightDataFileDirectory = Path.Combine(projectDirectory, "Data/flight_info.json");
+            FlightLoader_JSON flightLoader = new FlightLoader_JSON(flightDataFileDirectory);
+            List<Flight> flights = flightLoader.LoadFlights();
+            return flights;
+
         }
     }
 }
