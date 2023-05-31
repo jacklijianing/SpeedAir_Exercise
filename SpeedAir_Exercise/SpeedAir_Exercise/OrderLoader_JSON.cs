@@ -54,6 +54,7 @@ namespace SpeedAir_Exercise
                     }
                 }
 
+                r.Close();
                 return result;
             }
         }

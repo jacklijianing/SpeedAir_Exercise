@@ -9,23 +9,39 @@ namespace SpeedAir_Exercise
     {
         static void Main(string[] args)
         {
-            List<Flight> flights = new List<Flight>();
-            // read flight information
-            // story 1 will update this to better design
-            flights.Add(new Flight(0, "YUL", "YYZ", 1));
-            flights.Add(new Flight(1, "YUL", "YYC", 1));
-            flights.Add(new Flight(2, "YUL", "YVR", 1));
-            flights.Add(new Flight(3, "YUL", "YYZ", 2));
-            flights.Add(new Flight(4, "YUL", "YYC", 2));
-            flights.Add(new Flight(5, "YUL", "YVR", 2));
-
-            // read orders
             string workingDirectory = Environment.CurrentDirectory;
             string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
-            string dataFileDirectory = Path.Combine(projectDirectory, "Data/coding-assigment-orders.json");
-            OrderLoader_JSON loader = new OrderLoader_JSON(dataFileDirectory);
-            List<Order> orders = loader.LoadOrders();
-            Console.WriteLine("Orders loaded, succeed: {0}, failed: {1}", orders.Count, loader.getLastFailedCount());
+
+            // read flight information
+            string flightDataFileDirectory = Path.Combine(projectDirectory, "Data/flight_info.txt");
+            FlightLoader_File flightLoader = new FlightLoader_File(flightDataFileDirectory);
+            List<Flight> flights = flightLoader.LoadFlights();
+            // show flights out
+
+            foreach (Flight flight in flights)
+            {
+                FlightPrinter printer = new FlightPrinter(flight);
+                printer.PrintFlightOnCMD();
+            }
+
+            // read flight information from JSON file
+            string flightDataFileDirectory2 = Path.Combine(projectDirectory, "Data/flight_info.json");
+            FlightLoader_JSON flightLoader2 = new FlightLoader_JSON(flightDataFileDirectory2);
+            List<Flight> flights2 = flightLoader2.LoadFlights();
+            // show flight2 information out
+
+            foreach (Flight flight in flights2)
+            {
+                FlightPrinter printer = new FlightPrinter(flight);
+                printer.PrintFlightOnCMD();
+            }
+
+            // read orders
+
+            string orderDataFileDirectory = Path.Combine(projectDirectory, "Data/coding-assigment-orders.json");
+            OrderLoader_JSON orderLoader = new OrderLoader_JSON(orderDataFileDirectory);
+            List<Order> orders = orderLoader.LoadOrders();
+            Console.WriteLine("Orders loaded, succeed: {0}, failed: {1}", orders.Count, orderLoader.getLastFailedCount());
 
             // allocate orders to flights
             OrderAllocator allocator = OrderAllocator.getInstance();
