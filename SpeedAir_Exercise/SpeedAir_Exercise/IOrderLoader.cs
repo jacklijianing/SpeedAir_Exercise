@@ -7,6 +7,12 @@ namespace SpeedAir_Exercise
 {
     interface IOrderLoader
     {
-        public List<Order> LoadOrders();
+        public void LoadOrders();
+
+        public int getFailedCount();
+        public int getSucceedCount();
+
+        public List<Order> getSucceedOrders();
+        public List<OrderRaw> getFailedOrders();
     }
 }

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace SpeedAir_Exercise.BasicClass
 {
-    class Order
+    class Order : OrderRaw
     {
         int id;
         string name;
@@ -12,7 +12,7 @@ namespace SpeedAir_Exercise.BasicClass
         City destination;
 
         private string DEFAULT_DEPARTURE_CITY = "YUL";
-        public Order(int id, string name, string destination)
+        public Order(int id, string name, string destination) : base(name, destination)
         {
             this.id = id;
             this.name = name;

@@ -12,7 +12,7 @@ namespace SpeedAir_Exercise
             string workingDirectory = Environment.CurrentDirectory;
             string projectDirectory = Directory.GetParent(workingDirectory).Parent.Parent.FullName;
 
-            // read flight information
+            // read flight information, story 1
             string flightDataFileDirectory = Path.Combine(projectDirectory, "Data/flight_info.txt");
             FlightLoader_File flightLoader = new FlightLoader_File(flightDataFileDirectory);
             List<Flight> flights = flightLoader.LoadFlights();
@@ -24,6 +24,7 @@ namespace SpeedAir_Exercise
                 printer.PrintFlightOnCMD();
             }
 
+            // ANOTHER METHOD TO READ, story 1
             // read flight information from JSON file
             string flightDataFileDirectory2 = Path.Combine(projectDirectory, "Data/flight_info.json");
             FlightLoader_JSON flightLoader2 = new FlightLoader_JSON(flightDataFileDirectory2);
@@ -40,13 +41,14 @@ namespace SpeedAir_Exercise
 
             string orderDataFileDirectory = Path.Combine(projectDirectory, "Data/coding-assigment-orders.json");
             OrderLoader_JSON orderLoader = new OrderLoader_JSON(orderDataFileDirectory);
-            List<Order> orders = orderLoader.LoadOrders();
-            Console.WriteLine("Orders loaded, succeed: {0}, failed: {1}", orders.Count, orderLoader.getLastFailedCount());
+            orderLoader.LoadOrders();
+            List<Order> orders = orderLoader.getSucceedOrders();
+            Console.WriteLine("Orders loaded, succeed: {0}, error: {1}", orderLoader.getSucceedCount(), orderLoader.getFailedCount());
+            List<OrderRaw> failedOrders = orderLoader.getFailedOrders();
 
             // allocate orders to flights
             OrderAllocator allocator = OrderAllocator.getInstance();
             allocator.Loadflights(flights);
-            List<Order> failedOrders = new List<Order>();
             foreach (Order order in orders)
             {
                 if (!allocator.AllocateOrder(order))
@@ -70,9 +72,9 @@ namespace SpeedAir_Exercise
 
             // output the failed information
             Console.WriteLine("Below are the orders not carried by any flights");
-            foreach (Order order in failedOrders)
+            foreach (OrderRaw order in failedOrders)
             {
-                Console.Write(order.getName() + ", ");
+                Console.Write(order.getRawName() + ", ");
             }
 
             // Story 2: output orders with flight itinerary

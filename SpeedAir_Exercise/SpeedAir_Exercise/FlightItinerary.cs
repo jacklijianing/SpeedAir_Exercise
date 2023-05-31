@@ -9,8 +9,8 @@ namespace SpeedAir_Exercise
     class FlightItinerary
     {
         List<Flight> flights;
-        List<Order> failedOrders;
-        public FlightItinerary(List<Flight> flights, List<Order> failedOrders)
+        List<OrderRaw> failedOrders;
+        public FlightItinerary(List<Flight> flights, List<OrderRaw> failedOrders)
         {
             this.flights = flights;
             this.failedOrders = failedOrders;
@@ -28,15 +28,18 @@ namespace SpeedAir_Exercise
                     allOrder.Add(new OrderWithFlightInfo(order, flight.GetID()));
                 }
             }
+            // print all assigned orders
             foreach (OrderWithFlightInfo order in allOrder.OrderBy(f => f.getID()))
             {
                 Flight flight = flights.Where(x => x.GetID() == order.GetFlightID()).FirstOrDefault();
                 Console.WriteLine("order: {0}, flightNumber: {1}, departure: {2}, arrival: {3}, day: {4}", order.getName(), flight.GetID(), flight.GetFromCity().getAbbr(), flight.GetToCity().getAbbr(), flight.GetDay());
             }
-            foreach (Order order in failedOrders)
+            // print all orders failed to assign
+            foreach (OrderRaw order in failedOrders)
             {
-                Console.WriteLine("order: {0}, flightNumber: not scheduled", order.getName());
+                Console.WriteLine("order: {0}, flightNumber: not scheduled", order.getRawName());
             }
+            // print all orders with bad information
         }
     }
 }

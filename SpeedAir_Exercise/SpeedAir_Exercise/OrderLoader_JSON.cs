@@ -11,26 +11,37 @@ namespace SpeedAir_Exercise
     class OrderLoader_JSON : IOrderLoader
     {
         string fileLocation;
-        int succeedCount = 0; // save the succeed count so that if we want to load multiple files in future, the ID can continue
-        int lastFailedCount = 0;
-        int totalFailedCount = 0;
+        int succeedCount = 0;
+        int failedCount = 0;
+        List<Order> succeedOrders;
+        List<OrderRaw> failedOrders;
         public OrderLoader_JSON(string fileLocation)
         {
             this.fileLocation = fileLocation;
+            succeedOrders = new List<Order>();
+            failedOrders = new List<OrderRaw>();
         }
 
-        public int getLastFailedCount()
+        public int getFailedCount()
         {
-            return lastFailedCount;
+            return failedCount;
         }
-        public int getTotalFailedCount()
+        public int getSucceedCount()
         {
-            return totalFailedCount;
+            return succeedCount;
         }
-        public List<Order> LoadOrders()
+
+        public List<Order> getSucceedOrders()
         {
-            lastFailedCount = 0;
-            List<Order> result = new List<Order>();
+            return succeedOrders;
+        }
+
+        public List<OrderRaw> getFailedOrders()
+        {
+            return failedOrders;
+        }
+        public void LoadOrders()
+        {
             using (StreamReader r = new StreamReader(fileLocation))
             {
                 string json = r.ReadToEnd();
@@ -44,18 +55,17 @@ namespace SpeedAir_Exercise
                         // item.Value is  {"destination" : "YYZ"},
                         Order order = new Order(succeedCount, item.Name, item.Value["destination"].ToString());
                         succeedCount++;
-                        result.Add(order);
+                        succeedOrders.Add(order);
                     }
                     catch (Exception e)
                     {
                         // We will get exception when the destination city abbreviation does not exist
-                        lastFailedCount++;
-                        totalFailedCount++;
+                        failedCount++;
+                        failedOrders.Add(new OrderRaw(item.Name, item.Value["destination"].ToString()));
                     }
                 }
 
                 r.Close();
-                return result;
             }
         }
     }
