@@ -20,6 +20,11 @@ namespace SpeedAir_Exercise.BasicClass
             this.destination = new City(destination);
         }
 
+        public int getID()
+        {
+            return id;
+        }
+
         public City getDeparture()
         {
             return departure;

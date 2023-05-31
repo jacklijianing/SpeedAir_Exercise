@@ -74,6 +74,11 @@ namespace SpeedAir_Exercise
             {
                 Console.Write(order.getName() + ", ");
             }
+
+            // Story 2: output orders with flight itinerary
+            Console.WriteLine("Below are the orders with flight itinerary");
+            FlightItinerary itinerary = new FlightItinerary(allocatedFlights, failedOrders);
+            itinerary.ordersShowFlightInfo();
         }
     }
 }
